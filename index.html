@@ -1,1023 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carbon Lens — Free Carbon Audit for Indian MSMEs</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --g: #1D9E75;
-  --g2: #0f6e56;
-  --g3: #e1f5ee;
-  --g4: #9fe1cb;
-  --ink: #0f1c14;
-  --ink2: #3d5247;
-  --ink3: #7a9589;
-  --paper: #f7faf8;
-  --card: #ffffff;
-  --edge: #dceee7;
-  --edge2: #c4ddd3;
-  --orange: #e8820c;
-  --orange-bg: #fef3e2;
-  --blue: #1a6fbd;
-  --blue-bg: #e8f1fb;
-  --purple: #6e3fb3;
-  --purple-bg: #f2ecfc;
-  --red: #c0392b;
-  --red-bg: #fdeaea;
-  --amber: #b5720c;
-  --amber-bg: #fef9e7;
-  --radius: 14px;
-  --radius-sm: 8px;
-  --shadow: 0 2px 8px rgba(15,28,20,0.06), 0 0 0 1px rgba(15,28,20,0.04);
-  --shadow-hover: 0 6px 20px rgba(15,28,20,0.1), 0 0 0 1px rgba(15,28,20,0.06);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carbon Lens — Free Carbon Audit for Indian MSMEs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --g: #1D9E75;
+      --g2: #0f6e56;
+      --g3: #e1f5ee;
+      --g4: #9fe1cb;
+      --ink: #0f1c14;
+      --ink2: #3d5247;
+      --ink3: #7a9589;
+      --paper: #f7faf8;
+      --card: #ffffff;
+      --edge: #dceee7;
+      --edge2: #c4ddd3;
+      --orange: #e8820c;
+      --orange-bg: #fef3e2;
+      --blue: #1a6fbd;
+      --blue-bg: #e8f1fb;
+      --purple: #6e3fb3;
+      --purple-bg: #f2ecfc;
+      --red: #c0392b;
+      --red-bg: #fdeaea;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --shadow: 0 2px 8px rgba(15, 28, 20, 0.06), 0 0 0 1px rgba(15, 28, 20, 0.04);
+    }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  background: var(--paper);
-  color: var(--ink);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-.hidden { display: none !important; }
+    .hidden {
+      display: none !important;
+    }
 
-/* ── NAV ── */
-nav {
-  background: var(--card);
-  border-bottom: 1px solid var(--edge);
-  padding: 0 24px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.logo {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--g);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  letter-spacing: -0.3px;
-}
-.logo-icon {
-  width: 28px;
-  height: 28px;
-  background: var(--g);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.logo-icon svg { width: 16px; height: 16px; }
-.nav-tag {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--ink3);
-  background: var(--g3);
-  padding: 4px 10px;
-  border-radius: 100px;
-  letter-spacing: 0.2px;
-}
+    /* ── NAVIGATION ── */
+    nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--edge);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-/* ── MAIN WRAPPER ── */
-main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 32px 16px 64px;
-}
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--g);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.panel {
-  width: 100%;
-  max-width: 560px;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--g);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
 
-/* ── FORM ── */
-.form-header {
-  padding: 36px 32px 24px;
-  border-bottom: 1px solid var(--edge);
-}
-.form-header h1 {
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-.form-header p {
-  font-size: 14px;
-  color: var(--ink3);
-  line-height: 1.5;
-}
-.step-pill {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--g);
-  background: var(--g3);
-  padding: 3px 10px;
-  border-radius: 100px;
-  margin-bottom: 14px;
-}
+    /* ── MAIN PANEL ── */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 32px 16px;
+    }
 
-.form-body { padding: 24px 32px; }
+    .panel {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
 
-.field {
-  margin-bottom: 18px;
-}
-.field label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink2);
-  margin-bottom: 7px;
-  letter-spacing: 0.1px;
-}
-.field input,
-.field select {
-  width: 100%;
-  height: 44px;
-  padding: 0 14px;
-  border: 1.5px solid var(--edge2);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 14px;
-  color: var(--ink);
-  background: var(--paper);
-  outline: none;
-  transition: border-color 0.15s, background 0.15s;
-  appearance: none;
-}
-.field input:focus,
-.field select:focus {
-  border-color: var(--g);
-  background: #fff;
-}
-.field input::placeholder { color: var(--ink3); }
+    .form-header {
+      padding: 36px 32px 24px;
+      border-bottom: 1px solid var(--edge);
+    }
 
-.field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
+    .form-body {
+      padding: 24px 32px;
+    }
 
-.field-hint {
-  font-size: 11px;
-  color: var(--ink3);
-  margin-top: 5px;
-}
+    .field {
+      margin-bottom: 18px;
+    }
 
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--ink3);
-  margin: 28px 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.section-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--edge);
-}
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink2);
+      margin-bottom: 7px;
+    }
 
-.submit-btn {
-  width: 100%;
-  height: 52px;
-  background: var(--g);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  letter-spacing: -0.2px;
-  transition: background 0.15s, transform 0.1s;
-}
-.submit-btn:hover { background: var(--g2); }
-.submit-btn:active { transform: scale(0.99); }
+    .field input,
+    .field select {
+      width: 100%;
+      height: 44px;
+      padding: 0 14px;
+      border: 1.5px solid var(--edge2);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      background: var(--paper);
+      outline: none;
+    }
 
-/* ── LOADING ── */
-.loading-box {
-  padding: 72px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-.loader-ring {
-  position: relative;
-  width: 64px;
-  height: 64px;
-}
-.loader-ring::before,
-.loader-ring::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-}
-.loader-ring::before {
-  inset: 0;
-  border: 3px solid var(--edge);
-}
-.loader-ring::after {
-  inset: 0;
-  border: 3px solid transparent;
-  border-top-color: var(--g);
-  animation: spin 0.9s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-dot {
-  width: 32px;
-  height: 32px;
-  background: var(--g);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  animation: pulse 1.8s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(0.85);opacity:0.7} 50%{transform:translate(-50%,-50%) scale(1);opacity:1} }
-.loading-text-wrap { text-align: center; }
-.loading-main {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--ink);
-  min-height: 28px;
-  transition: opacity 0.3s;
-}
-.loading-sub {
-  font-size: 13px;
-  color: var(--ink3);
-  margin-top: 4px;
-  font-family: 'DM Mono', monospace;
-}
-.loading-steps {
-  display: flex;
-  gap: 6px;
-  margin-top: 6px;
-}
-.lstep {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--edge2);
-  transition: background 0.3s;
-}
-.lstep.active { background: var(--g); }
+    .field input:focus {
+      border-color: var(--g);
+      background: #fff;
+    }
 
-/* ── RESULTS ── */
-.results-wrap { animation: fadeUp 0.5s ease-out; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+    .submit-btn {
+      width: 100%;
+      height: 52px;
+      background: var(--g);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-.hero-band {
-  background: linear-gradient(135deg, #0a3d2b 0%, #0f6e56 60%, #1D9E75 100%);
-  padding: 36px 32px;
-  position: relative;
-  overflow: hidden;
-}
-.hero-band::before {
-  content: '';
-  position: absolute;
-  top: -40px; right: -40px;
-  width: 200px; height: 200px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.04);
-}
-.hero-band::after {
-  content: '';
-  position: absolute;
-  bottom: -60px; left: 20px;
-  width: 160px; height: 160px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.03);
-}
-.hero-biz {
-  font-size: 12px;
-  font-weight: 500;
-  color: rgba(255,255,255,0.6);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-}
-.hero-num {
-  font-size: 64px;
-  font-weight: 300;
-  color: #fff;
-  letter-spacing: -3px;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-.hero-unit {
-  font-size: 18px;
-  font-weight: 400;
-  color: rgba(255,255,255,0.75);
-  margin-top: 4px;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  padding: 7px 14px;
-  border-radius: 100px;
-  font-size: 13px;
-  font-weight: 500;
-}
-.hero-badge.good { background: rgba(29,158,117,0.3); color: #9fe1cb; }
-.hero-badge.warn { background: rgba(232,130,12,0.25); color: #fec971; }
-.hero-badge.bad  { background: rgba(192,57,43,0.25); color: #f8a9a3; }
-.hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; }
-.hero-badge.good .hero-badge-dot { background: #9fe1cb; }
-.hero-badge.warn .hero-badge-dot { background: #fec971; }
-.hero-badge.bad  .hero-badge-dot { background: #f8a9a3; }
+    .submit-btn:hover {
+      background: var(--g2);
+    }
 
-.results-body { padding: 28px 32px; }
+    /* ── RESULTS ── */
+    .hero-band {
+      background: linear-gradient(135deg, #0a3d2b 0%, #0f6e56 60%, #1D9E75 100%);
+      padding: 36px 32px;
+      color: white;
+      position: relative;
+    }
 
-.sec-head {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--ink3);
-  margin: 0 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.sec-head::after { content: ''; flex: 1; height: 1px; background: var(--edge); }
+    .hero-num {
+      font-size: 64px;
+      font-weight: 300;
+      letter-spacing: -3px;
+      line-height: 1;
+    }
 
-/* BREAKDOWN BARS */
-.bar-row { margin-bottom: 20px; }
-.bar-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 7px;
-}
-.bar-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink);
-}
-.bar-val {
-  font-size: 13px;
-  color: var(--ink2);
-  font-family: 'DM Mono', monospace;
-  font-weight: 400;
-}
-.bar-track {
-  height: 8px;
-  background: var(--paper);
-  border-radius: 100px;
-  overflow: hidden;
-  border: 1px solid var(--edge);
-}
-.bar-fill {
-  height: 100%;
-  width: 0;
-  border-radius: 100px;
-  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.bar-scope {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 4px;
-  color: var(--ink3);
-}
+    .hero-unit {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
 
-/* DIVIDER */
-.divider { height: 1px; background: var(--edge); margin: 28px 0; }
+    .results-body {
+      padding: 28px 32px;
+    }
 
-/* REC CARDS */
-.rec-card {
-  border: 1.5px solid var(--edge);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 12px;
-  display: flex;
-  gap: 14px;
-  transition: box-shadow 0.2s, border-color 0.2s;
-}
-.rec-card:hover {
-  box-shadow: var(--shadow-hover);
-  border-color: var(--g4);
-}
-.rec-num {
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  background: var(--g3);
-  color: var(--g2);
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.rec-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-.badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.badge {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 3px 9px;
-  border-radius: 6px;
-  letter-spacing: 0.2px;
-}
-.b-co2 { background: var(--g3); color: var(--g2); }
-.b-money { background: var(--amber-bg); color: var(--amber); }
-.b-easy { background: var(--g3); color: var(--g2); }
-.b-medium { background: var(--orange-bg); color: var(--orange); }
-.b-hard { background: var(--red-bg); color: var(--red); }
-.b-info { background: var(--blue-bg); color: var(--blue); }
+    .bar-row {
+      margin-bottom: 20px;
+    }
 
-/* SAVINGS SUMMARY */
-.savings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.savings-card {
-  background: var(--paper);
-  border: 1.5px solid var(--edge);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  text-align: center;
-}
-.savings-num {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--g);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.5px;
-}
-.savings-label {
-  font-size: 11px;
-  color: var(--ink3);
-  margin-top: 3px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-}
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
 
-/* BUTTONS */
-.btn-row { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
-.btn-primary {
-  width: 100%; height: 50px;
-  background: var(--g);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.btn-primary:hover { background: var(--g2); }
-.btn-secondary {
-  width: 100%; height: 46px;
-  background: transparent;
-  color: var(--g);
-  border: 1.5px solid var(--edge2);
-  border-radius: var(--radius-sm);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-}
-.btn-secondary:hover { border-color: var(--g); background: var(--g3); }
+    .bar-track {
+      height: 8px;
+      background: var(--paper);
+      border-radius: 100px;
+      border: 1px solid var(--edge);
+      overflow: hidden;
+    }
 
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 24px 16px;
-  font-size: 12px;
-  color: var(--ink3);
-  border-top: 1px solid var(--edge);
-  background: var(--card);
-}
+    .bar-fill {
+      height: 100%;
+      transition: width 1s ease-out;
+    }
 
-/* PRINT REPORT */
-@media print {
-  nav, footer, .btn-row, #formContainer, #loadingContainer { display: none !important; }
-  body { background: white; }
-  .panel { box-shadow: none; border-radius: 0; }
-  #print-report { display: block !important; }
-  .results-wrap { display: block !important; }
-  #resultsContainer { display: block !important; }
-}
-#print-report {
-  display: none;
-  font-family: 'DM Sans', sans-serif;
-  padding: 40px;
-  color: #0f1c14;
-}
-.pr-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #1D9E75;
-  margin-bottom: 28px;
-}
-.pr-logo { font-size: 22px; font-weight: 700; color: #1D9E75; }
-.pr-meta { font-size: 12px; color: #7a9589; text-align: right; }
-.pr-total { font-size: 48px; font-weight: 300; color: #0f1c14; letter-spacing: -2px; }
-.pr-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-.pr-table th { background: #f0fdf4; padding: 10px 14px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #3d5247; border-bottom: 1px solid #dceee7; }
-.pr-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #f0f0f0; }
-.pr-rec { margin-bottom: 14px; border-left: 3px solid #1D9E75; padding-left: 14px; }
-.pr-rec-name { font-weight: 600; font-size: 14px; }
-.pr-rec-detail { font-size: 12px; color: #7a9589; margin-top: 3px; }
-.pr-footer { margin-top: 40px; font-size: 11px; color: #aaa; text-align: center; border-top: 1px solid #eee; padding-top: 16px; }
+    .rec-card {
+      border: 1.5px solid var(--edge);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      transition: 0.2s;
+    }
 
-/* RESPONSIVE */
-@media (max-width: 520px) {
-  .form-header, .form-body, .results-body { padding-left: 20px; padding-right: 20px; }
-  .hero-band { padding: 28px 20px; }
-  .hero-num { font-size: 52px; }
-  .field-row { grid-template-columns: 1fr; }
-  .savings-grid { grid-template-columns: 1fr; }
-}
-</style>
+    .rec-card:hover {
+      border-color: var(--g4);
+      box-shadow: var(--shadow);
+    }
+
+    .rec-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--g3);
+      color: var(--g2);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-right: 5px;
+    }
+
+    .b-co2 {
+      background: var(--g3);
+      color: var(--g2);
+    }
+
+    .b-money {
+      background: var(--fef9e7);
+      color: var(--amber);
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--ink3);
+      background: var(--card);
+      border-top: 1px solid var(--edge);
+    }
+
+    /* ── PRINT LOGIC ── */
+    @media print {
+
+      nav,
+      footer,
+      .btn-row,
+      #formContainer,
+      #resultsContainer {
+        display: none !important;
+      }
+
+      #print-report {
+        display: block !important;
+        padding: 40px;
+        background: white;
+      }
+
+      body {
+        background: white;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+
+    #print-report {
+      display: none;
+    }
+
+    .pr-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .pr-table th,
+    .pr-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
 </head>
+
 <body>
 
-<nav>
-  <div class="logo">
-    <div class="logo-icon">
-      <svg viewBox="0 0 16 16" fill="none">
-        <path d="M8 2C4.5 2 2 5 2 8s2.5 6 6 6 6-3 6-6-2.5-6-6-6z" stroke="white" stroke-width="1.2"/>
-        <path d="M8 5v3l2 2" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
-        <circle cx="8" cy="8" r="1" fill="white"/>
-      </svg>
+  <nav>
+    <div class="logo">
+      <div class="logo-icon">C</div> Carbon Lens
     </div>
-    Carbon Lens
-  </div>
-  <span class="nav-tag">India's MSME Auditor</span>
-</nav>
+    <span style="font-size:12px; color:var(--ink3)">India's MSME Auditor</span>
+  </nav>
 
-<main>
-  <div class="panel">
-
-    <!-- FORM -->
-    <div id="formContainer">
-      <div class="form-header">
-        <div class="step-pill">Step 1 of 2</div>
-        <h1>Carbon Audit</h1>
-        <p>Free footprint analysis for Indian businesses — takes under 5 minutes.</p>
-      </div>
-      <div class="form-body">
-        <form id="auditForm" autocomplete="off">
-
-          <div class="section-label">About your business</div>
-
-          <div class="field-row">
-            <div class="field">
-              <label>Business name</label>
-              <input type="text" id="businessName" placeholder="e.g. Sharma Textiles" required>
-            </div>
-            <div class="field">
-              <label>City</label>
-              <input type="text" id="city" placeholder="e.g. Surat" required>
-            </div>
-          </div>
-
-          <div class="field-row">
+  <main>
+    <div class="panel">
+      <div id="formContainer">
+        <div class="form-header">
+          <h1>Carbon Audit</h1>
+          <p>Analyze your business footprint in minutes. Built for Indian MSMEs.</p>
+        </div>
+        <div class="form-body">
+          <form id="auditForm">
+            <div class="field"><label>Business Name</label><input type="text" id="businessName"
+                placeholder="e.g. Sharma Textiles" required></div>
             <div class="field">
               <label>Industry</label>
               <select id="businessType" required>
-                <option value="">Select...</option>
                 <option value="Manufacturing">Manufacturing</option>
-                <option value="Textile">Textile / Garments</option>
-                <option value="Retail">Retail / Trade</option>
-                <option value="Restaurant">Restaurant / Food</option>
                 <option value="IT">IT / Office</option>
-                <option value="Logistics">Logistics / Transport</option>
-                <option value="Other">Other</option>
+                <option value="Restaurant">Restaurant / Food</option>
+                <option value="Textile">Textile / Garments</option>
               </select>
             </div>
             <div class="field">
-              <label>Employees</label>
-              <input type="number" id="employees" placeholder="e.g. 20" min="1" required>
+              <label>Monthly Electricity (kWh)</label>
+              <input type="number" id="electricity" placeholder="Check your DISCOM bill" required>
             </div>
-          </div>
-
-          <div class="section-label">Energy usage <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0">(check your monthly bills)</span></div>
-
-          <div class="field">
-            <label>Monthly electricity (kWh / units)</label>
-            <input type="number" id="electricity" placeholder="e.g. 8000" min="0" required>
-            <div class="field-hint">Find this on your DISCOM bill. 1 unit = 1 kWh.</div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label>Generator diesel (litres/mo)</label>
-              <!-- <input type="number" id="dieselLitres" placeholder="0" min="0" value="0"> -->
-              <input type="number" id="dieselLitres" placeholder="0" min="0" >
-            </div>
-            <div class="field">
-              <label>Vehicle fuel (litres/mo)</label>
-              <!-- <input type="number" id="fuelLitres" placeholder="0" min="0" value="0"> -->
-              <input type="number" id="fuelLitres" placeholder="0" min="0" >
-            </div>
-          </div>
-
-          <button type="submit" class="submit-btn">Calculate My Carbon Footprint →</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- LOADING -->
-    <div id="loadingContainer" class="hidden">
-      <div class="loading-box">
-        <div class="loader-ring">
-          <div class="loading-dot"></div>
-        </div>
-        <div class="loading-text-wrap">
-          <div class="loading-main" id="loadingText">Calculating emissions…</div>
-          <div class="loading-sub" id="loadingSub">India grid: 0.82 kg CO₂/kWh</div>
-          <div class="loading-steps" style="justify-content:center; margin-top:12px;">
-            <div class="lstep active" id="ls1"></div>
-            <div class="lstep" id="ls2"></div>
-            <div class="lstep" id="ls3"></div>
-          </div>
+            <button type="submit" class="submit-btn">Calculate My Footprint →</button>
+          </form>
         </div>
       </div>
-    </div>
 
-    <!-- RESULTS -->
-    <div id="resultsContainer" class="hidden results-wrap">
-      <div id="resultsContent"></div>
-
-      <!-- PRINT REPORT (hidden in screen mode) -->
-      <div id="print-report"></div>
-    </div>
-
-  </div>
-</main>
-
-<footer>
-  Built by Soumya | Udit | Vedant | vijjval <br>Built for India's 63 million MSMEs &nbsp;·&nbsp; Data:April,2026 India CEA, GHG Protocol, DEFRA
-  &nbsp;·&nbsp; <a href="https://github.com/soumyax007/Riptide_Carbon-Lens" target="_blank" style="color:var(--g);">GitHub</a>
-</footer>
-
-<script>
-/* ─── CONFIG ─── */
-// Replace with your Anthropic API key
-const API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
-
-/* ─── STATE ─── */
-let auditResults = {};
-let loadingInterval;
-
-/* ─── FORM SUBMIT ─── */
-document.getElementById('auditForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const fd = {
-    businessName: document.getElementById('businessName').value.trim(),
-    businessType: document.getElementById('businessType').value,
-    city:         document.getElementById('city').value.trim(),
-    employees:    parseInt(document.getElementById('employees').value) || 1,
-    electricityKwh: parseFloat(document.getElementById('electricity').value) || 0,
-    dieselLitres: parseFloat(document.getElementById('dieselLitres').value) || 0,
-    fuelLitres:   parseFloat(document.getElementById('fuelLitres').value) || 0
-  };
-  document.getElementById('formContainer').classList.add('hidden');
-  document.getElementById('loadingContainer').classList.remove('hidden');
-  startLoadingAnim();
-  await runAudit(fd);
-});
-
-/* ─── LOADING ANIMATION ─── */
-function startLoadingAnim() {
-  const msgs = [
-    ['Calculating emissions…', 'India grid: 0.82 kg CO₂/kWh'],
-    ['Benchmarking against peers…', 'Comparing similar MSMEs'],
-    ['AI generating roadmap…', 'Powered by Claude']
-  ];
-  let i = 0;
-  const stepDots = [document.getElementById('ls1'), document.getElementById('ls2'), document.getElementById('ls3')];
-  function tick() {
-    document.getElementById('loadingText').textContent = msgs[i][0];
-    document.getElementById('loadingSub').textContent  = msgs[i][1];
-    stepDots.forEach((d,j) => d.classList.toggle('active', j <= i));
-    i = (i + 1) % msgs.length;
-  }
-  tick();
-  loadingInterval = setInterval(tick, 1800);
-}
-
-/* ─── CORE AUDIT MATH ─── */
-function calcEmissions(fd) {
-  const elec   = (fd.electricityKwh * 0.82  * 12) / 1000;  // India CEA
-  const diesel = (fd.dieselLitres   * 2.68  * 12) / 1000;  // DEFRA
-  const fuel   = (fd.fuelLitres     * 2.31  * 12) / 1000;  // DEFRA petrol
-  const supply = (fd.employees * 0.5) + (elec * 0.3);      // GHG Protocol Scope 3 proxy
-  const total  = elec + diesel + fuel + supply;
-  return { elec, diesel, fuel, supply, total };
-}
-
-/* ─── AI RECS (with failsafe) ─── */
-async function getRecommendations(fd, ems) {
-  const isApiKeySet = API_KEY && API_KEY !== 'YOUR_ANTHROPIC_API_KEY_HERE';
-  
-  if (isApiKeySet) {
-    try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': API_KEY,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5',
-          max_tokens: 800,
-          messages: [{
-            role: 'user',
-            content: `You are a carbon reduction expert for Indian MSMEs. A ${fd.businessType} business in ${fd.city} with ${fd.employees} employees has this annual footprint: Electricity ${ems.elec.toFixed(1)}T, Diesel ${ems.diesel.toFixed(1)}T, Vehicles ${ems.fuel.toFixed(1)}T, Supply Chain ${ems.supply.toFixed(1)}T, TOTAL ${ems.total.toFixed(1)}T CO2e.
-
-Return ONLY a valid JSON array of exactly 3 actions. No preamble, no markdown, just the JSON array:
-[{"action":"Name of action","co2Saved":number,"inrSaved":number,"difficulty":"Easy"}]
-
-Make co2Saved realistic (1-40% of relevant emission source). Make inrSaved realistic for Indian MSME scale (5000-150000 INR/year). Difficulty must be exactly Easy, Medium, or Hard.`
-          }]
-        })
-      });
-      if (!resp.ok) throw new Error('API error: ' + resp.status);
-      const data = await resp.json();
-      const text = data.content[0].text.trim();
-      const clean = text.replace(/```json|```/g, '').trim();
-      const parsed = JSON.parse(clean);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      throw new Error('Invalid response format');
-    } catch (err) {
-      console.warn('Claude API failed, using smart fallback:', err.message);
-    }
-  }
-
-  /* ─── SMART FALLBACK ─── */
-  const { elec, diesel, supply } = ems;
-  const fallbacks = {
-    Manufacturing: [
-      { action: 'Install variable frequency drives (VFDs) on motors', co2Saved: +(elec * 0.12).toFixed(1), inrSaved: 35000, difficulty: 'Medium' },
-      { action: 'Switch to LED lighting and occupancy sensors',       co2Saved: +(elec * 0.08).toFixed(1), inrSaved: 18000, difficulty: 'Easy' },
-      { action: 'Rooftop solar (10kW system)',                       co2Saved: +(elec * 0.35).toFixed(1), inrSaved: 90000, difficulty: 'Hard' }
-    ],
-    Textile: [
-      { action: 'Solar water heating for dyeing process',            co2Saved: +(elec * 0.18).toFixed(1), inrSaved: 42000, difficulty: 'Medium' },
-      { action: 'LED lighting upgrade across production floor',      co2Saved: +(elec * 0.08).toFixed(1), inrSaved: 15000, difficulty: 'Easy' },
-      { action: 'Locally source cotton within 200km radius',        co2Saved: +(supply * 0.12).toFixed(1), inrSaved: 8000,  difficulty: 'Hard' }
-    ],
-    Restaurant: [
-      { action: 'Switch to LPG-efficient burners + induction hobs', co2Saved: +(elec * 0.2).toFixed(1),  inrSaved: 24000, difficulty: 'Easy' },
-      { action: 'Refrigeration optimization + door seals',          co2Saved: +(elec * 0.12).toFixed(1), inrSaved: 12000, difficulty: 'Easy' },
-      { action: 'Source vegetables from local farms (<50km)',       co2Saved: +(supply * 0.15).toFixed(1), inrSaved: 6000,  difficulty: 'Medium' }
-    ],
-    IT: [
-      { action: 'Enable power management on all computers + ACs',   co2Saved: +(elec * 0.15).toFixed(1), inrSaved: 14000, difficulty: 'Easy' },
-      { action: 'Switch to energy-star certified equipment',        co2Saved: +(elec * 0.1).toFixed(1),  inrSaved: 8000,  difficulty: 'Medium' },
-      { action: 'Green travel policy + WFH 2 days/week',           co2Saved: +(supply * 0.2).toFixed(1), inrSaved: 5000,  difficulty: 'Easy' }
-    ]
-  };
-  
-  const defaults = [
-    { action: 'Switch to LED lighting & BLDC fans',             co2Saved: +(elec * 0.12).toFixed(1), inrSaved: 15000, difficulty: 'Easy' },
-    { action: 'Install 5kW rooftop solar system',               co2Saved: +(elec * 0.38).toFixed(1), inrSaved: 75000, difficulty: 'Hard' },
-    { action: 'Localize top 3 suppliers within state boundaries', co2Saved: +(supply * 0.1).toFixed(1), inrSaved: 8000, difficulty: 'Medium' }
-  ];
-
-  return fallbacks[fd.businessType] || defaults;
-}
-
-/* ─── MAIN AUDIT RUNNER ─── */
-async function runAudit(fd) {
-  const ems  = calcEmissions(fd);
-  const recs = await getRecommendations(fd, ems);
-  clearInterval(loadingInterval);
-
-  const totalCo2Saved = recs.reduce((a, r) => a + parseFloat(r.co2Saved), 0);
-  const totalInrSaved = recs.reduce((a, r) => a + parseInt(r.inrSaved), 0);
-
-  auditResults = {
-    ...fd,
-    emissions: ems,
-    recommendations: recs,
-    totalCo2Saved: totalCo2Saved.toFixed(1),
-    totalInrSaved: totalInrSaved,
-    date: new Date().toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' })
-  };
-
-  renderDashboard();
-}
-
-/* ─── RENDER DASHBOARD ─── */
-function renderDashboard() {
-  document.getElementById('loadingContainer').classList.add('hidden');
-  document.getElementById('resultsContainer').classList.remove('hidden');
-
-  const { emissions: e, recommendations: recs, businessName, businessType, city, date } = auditResults;
-  const { total, elec, diesel, fuel, supply } = e;
-
-  let badgeClass = 'warn', badgeText = 'Average for your sector';
-  if (total < 20) { badgeClass = 'good'; badgeText = 'Below average — well done'; }
-  else if (total > 60) { badgeClass = 'bad'; badgeText = 'Above average — action needed'; }
-
-  const bars = [
-    { name: 'Electricity', scope: 'Scope 2', val: elec,   color: 'var(--g)',       pct: (elec/total*100).toFixed(0) },
-    { name: 'Diesel generators', scope: 'Scope 1', val: diesel, color: 'var(--orange)', pct: (diesel/total*100).toFixed(0) },
-    { name: 'Vehicle fuel',  scope: 'Scope 1', val: fuel,   color: 'var(--blue)',    pct: (fuel/total*100).toFixed(0) },
-    { name: 'Supply chain',  scope: 'Scope 3', val: supply, color: 'var(--purple)',  pct: (supply/total*100).toFixed(0) },
-  ].filter(b => b.val > 0 || b.name === 'Electricity');
-
-  const barsHtml = bars.map((b, i) => `
-    <div class="bar-row">
-      <div class="bar-meta">
-        <span class="bar-name">${b.name}</span>
-        <span class="bar-val">${b.val.toFixed(2)} T &nbsp; <span style="color:var(--ink3)">${b.pct}%</span></span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill" id="bar${i}" style="background:${b.color}; width:0%"></div>
-      </div>
-      <div class="bar-scope">${b.scope}</div>
-    </div>
-  `).join('');
-
-  const recsHtml = recs.map((r, i) => `
-    <div class="rec-card">
-      <div class="rec-num">${i+1}</div>
-      <div style="flex:1">
-        <div class="rec-title">${r.action}</div>
-        <div class="badges">
-          <span class="badge b-co2">Save ${r.co2Saved} T CO₂/yr</span>
-          <span class="badge b-money">Save ₹${Number(r.inrSaved).toLocaleString('en-IN')}/yr</span>
-          <span class="badge b-${r.difficulty.toLowerCase()}">${r.difficulty}</span>
-        </div>
+      <div id="resultsContainer" class="hidden">
+        <div id="resultsContent"></div>
       </div>
     </div>
-  `).join('');
+  </main>
 
-  document.getElementById('resultsContent').innerHTML = `
+  <div id="print-report"></div>
+
+  <footer>
+    Built by Soumya | Udit | Vedant | Vijjval <br>
+    Data: India CEA (0.82 kg CO₂/kWh), GHG Protocol
+  </footer>
+
+  <script>
+    const auditForm = document.getElementById('auditForm');
+    let auditResults = {};
+
+    auditForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {
+        businessName: document.getElementById('businessName').value,
+        businessType: document.getElementById('businessType').value,
+        electricityKwh: parseFloat(document.getElementById('electricity').value) || 0
+      };
+
+      // LOGIC: 0.82 kg CO2 per kWh (India Grid Average)
+      const annualElec = (data.electricityKwh * 0.82 * 12) / 1000;
+      // Proxy for Scope 3 (Supply Chain) based on industry type
+      const supplyMultiplier = data.businessType === 'Manufacturing' ? 0.4 : 0.2;
+      const supplyChain = annualElec * supplyMultiplier;
+      const total = annualElec + supplyChain;
+
+      auditResults = {
+        ...data,
+        total: total.toFixed(2),
+        elec: annualElec.toFixed(2),
+        supply: supplyChain.toFixed(2),
+        date: new Date().toLocaleDateString('en-IN')
+      };
+
+      renderResults();
+    });
+
+    function renderResults() {
+      document.getElementById('formContainer').classList.add('hidden');
+      document.getElementById('resultsContainer').classList.remove('hidden');
+
+      const pctElec = ((auditResults.elec / auditResults.total) * 100).toFixed(0);
+
+      document.getElementById('resultsContent').innerHTML = `
     <div class="hero-band">
-      <div class="hero-biz">${businessName} · ${businessType} · ${city}</div>
-      <div class="hero-num">${total.toFixed(1)}</div>
+      <div style="text-transform: uppercase; font-size:12px; letter-spacing:1px; opacity:0.8;">${auditResults.businessName}</div>
+      <div class="hero-num">${auditResults.total}</div>
       <div class="hero-unit">tonnes CO₂e / year</div>
-      <div class="hero-badge ${badgeClass}">
-        <div class="hero-badge-dot"></div>
-        ${badgeText}
-      </div>
     </div>
-
     <div class="results-body">
+      <div class="bar-row">
+        <div class="bar-meta"><span>Electricity (Scope 2)</span><span>${auditResults.elec} T</span></div>
+        <div class="bar-track"><div class="bar-fill" style="background:var(--g); width:${pctElec}%"></div></div>
+      </div>
 
-      <div class="sec-head">Emissions breakdown</div>
-      ${barsHtml}
-
-      <div class="divider"></div>
-
-      <div class="sec-head">Recommended actions</div>
-      ${recsHtml}
-
-      <div class="divider"></div>
-
-      <div class="sec-head">If you implement all 3 actions</div>
-      <div class="savings-grid">
-        <div class="savings-card">
-          <div class="savings-num">${auditResults.totalCo2Saved} T</div>
-          <div class="savings-label">CO₂ saved / year</div>
-        </div>
-        <div class="savings-card">
-          <div class="savings-num">₹${Number(auditResults.totalInrSaved).toLocaleString('en-IN')}</div>
-          <div class="savings-label">Cash saved / year</div>
+      <div class="rec-card">
+        <div class="rec-num">1</div>
+        <div>
+          <div style="font-weight:600">Switch to BLDC Fans & LEDs</div>
+          <div style="margin-top:4px;">
+            <span class="badge b-co2">Save ${(auditResults.elec * 0.15).toFixed(1)} T</span>
+            <span class="badge b-money">Save ₹12k/yr</span>
+          </div>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn-primary" onclick="downloadPDF()">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 2v8M5 7l3 3 3-3M2 13h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          Download PDF Report
-        </button>
-        <button class="btn-secondary" onclick="location.reload()">Start new audit</button>
+      <div class="btn-row" style="margin-top:28px; display:flex; flex-direction:column; gap:10px;">
+        <button onclick="downloadPDF()" style="width:100%; height:50px; background:var(--g); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer;">Download PDF Report</button>
+        <button onclick="location.reload()" style="width:100%; height:46px; background:transparent; border:1px solid var(--edge2); border-radius:8px; cursor:pointer;">Start New Audit</button>
       </div>
-
     </div>
   `;
+    }
 
-  /* Animate bars after DOM paint */
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      bars.forEach((b, i) => {
-        const el = document.getElementById('bar' + i);
-        if (el) el.style.width = b.pct + '%';
-      });
-    }, 80);
-  });
-
-  /* Build hidden print report */
-  buildPrintReport();
-}
-
-/* ─── PDF REPORT ─── */
-function buildPrintReport() {
-  const { emissions: e, recommendations: recs, businessName, businessType, city, date } = auditResults;
-  const { total, elec, diesel, fuel, supply } = e;
-
-  document.getElementById('print-report').innerHTML = `
-    <div class="pr-header">
-      <div>
-        <div class="pr-logo">Carbon Lens</div>
-        <div style="font-size:12px;color:#7a9589;margin-top:2px;">India's MSME Carbon Auditor</div>
-      </div>
-      <div class="pr-meta">
-        ${businessName}<br>
-        ${businessType} · ${city}<br>
-        ${date}
-      </div>
+    function buildPrintReport() {
+      document.getElementById('print-report').innerHTML = `
+    <div style="border-bottom: 2px solid #1D9E75; padding-bottom:10px; margin-bottom:20px;">
+      <h1 style="color:#1D9E75">Carbon Lens Audit Report</h1>
+      <p>Business: <strong>${auditResults.businessName}</strong> | Date: ${auditResults.date}</p>
     </div>
-
-    <div style="margin-bottom:28px">
-      <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#7a9589;margin-bottom:8px;">Annual Carbon Footprint</div>
-      <div class="pr-total">${total.toFixed(2)} <span style="font-size:20px;color:#7a9589">tonnes CO₂e</span></div>
+    <div style="margin-bottom:30px">
+      <p style="text-transform:uppercase; font-size:12px; color:gray;">Total Annual Footprint</p>
+      <h2 style="font-size:48px; margin:0;">${auditResults.total} <small style="font-size:20px">tonnes CO₂e</small></h2>
     </div>
-
     <table class="pr-table">
-      <thead><tr><th>Emission Source</th><th>Scope</th><th>Tonnes CO₂e/yr</th><th>Share</th></tr></thead>
+      <thead><tr style="background:#f7faf8"><th>Emission Source</th><th>Scope</th><th>Tonnes CO₂e/yr</th></tr></thead>
       <tbody>
-        <tr><td>Electricity (grid)</td><td>2</td><td>${elec.toFixed(2)}</td><td>${(elec/total*100).toFixed(1)}%</td></tr>
-        <tr><td>Diesel generators</td><td>1</td><td>${diesel.toFixed(2)}</td><td>${(diesel/total*100).toFixed(1)}%</td></tr>
-        <tr><td>Vehicle fuel</td><td>1</td><td>${fuel.toFixed(2)}</td><td>${(fuel/total*100).toFixed(1)}%</td></tr>
-        <tr><td>Supply chain (est.)</td><td>3</td><td>${supply.toFixed(2)}</td><td>${(supply/total*100).toFixed(1)}%</td></tr>
-        <tr style="font-weight:700;background:#f7faf8"><td>Total</td><td></td><td>${total.toFixed(2)}</td><td>100%</td></tr>
+        <tr><td>Grid Electricity</td><td>2</td><td>${auditResults.elec}</td></tr>
+        <tr><td>Supply Chain (Estimated)</td><td>3</td><td>${auditResults.supply}</td></tr>
+        <tr style="font-weight:700"><td>Total</td><td></td><td>${auditResults.total}</td></tr>
       </tbody>
     </table>
-
-    <div style="margin:28px 0 16px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#7a9589">Action Plan</div>
-    ${recs.map((r,i) => `
-      <div class="pr-rec">
-        <div class="pr-rec-name">${i+1}. ${r.action}</div>
-        <div class="pr-rec-detail">Saves ${r.co2Saved} T CO₂/year &nbsp;·&nbsp; Saves ₹${Number(r.inrSaved).toLocaleString('en-IN')}/year &nbsp;·&nbsp; Difficulty: ${r.difficulty}</div>
-      </div>
-    `).join('')}
-
-    <div style="margin-top:20px;padding:14px;background:#f0fdf4;border-radius:8px;font-size:13px;font-weight:500;color:#0f6e56">
-      Implementing all 3 actions saves ${auditResults.totalCo2Saved} T CO₂/year and ₹${Number(auditResults.totalInrSaved).toLocaleString('en-IN')}/year.
-    </div>
-
-    <div class="pr-footer">
-      Generated by Carbon Lens &nbsp;·&nbsp; Data: India CEA (0.82 kg/kWh), GHG Protocol, DEFRA
-      &nbsp;·&nbsp; carbonlens.vercel.app
+    <div style="margin-top:40px; padding:20px; background:#f0fdf4; border-radius:8px;">
+      <p><strong>Recommendation:</strong> Implementing energy-efficient lighting and motor controls could reduce your annual emissions by up to 15%.</p>
     </div>
   `;
-}
+    }
 
-function downloadPDF() {
-  window.print();
-}
-</script>
+    function downloadPDF() {
+      buildPrintReport();
+      window.print();
+    }
+  </script>
 </body>
+
 </html>
