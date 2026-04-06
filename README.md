@@ -27,9 +27,6 @@ Carbon Lens takes basic operational inputs (electricity usage, diesel, fuel, hea
 
 ---
 
-## Demo
-
-![Carbon Lens Screenshot](./assets/screenshot.png)
 
 > *No account needed. No server. Just open `index.html` and go.*
 
