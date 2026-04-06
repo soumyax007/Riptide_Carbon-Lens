@@ -177,9 +177,8 @@ If the Anthropic API is unavailable (rate limit, no key, network error), Carbon 
 
 - [ ] Multi-location audit aggregation
 - [ ] BRSR (Business Responsibility & Sustainability Reporting) export
-- [ ] WhatsApp-based input flow for feature-phone accessibility
 - [ ] Benchmarking against MSME sector averages
-- [ ] Multilingual support (Hindi, Tamil, Telugu)
+
 
 ---
 
