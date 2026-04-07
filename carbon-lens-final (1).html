@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carbon Lens — Free Carbon Audit for Indian MSMEs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:       #f2f2f7;
+  --surface:  #ffffff;
+  --glass:    rgba(255,255,255,0.75);
+  --gb:       rgba(0,0,0,0.08);
+  --gs:       0 8px 32px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
+  --t1:       #1c1c1e;
+  --t2:       #3a3a3c;
+  --t3:       #8e8e93;
+  --t4:       #c7c7cc;
+  --sep:      rgba(0,0,0,0.10);
+  --fill:     rgba(0,0,0,0.04);
+  --fillh:    rgba(0,0,0,0.07);
+  --gr:       #34c759;
+  --grd:      #248a3d;
+  --grb:      rgba(52,199,89,0.12);
+  --grl:      rgba(52,199,89,0.18);
+  --red:      #ff3b30; --redb: rgba(255,59,48,0.10);
+  --ora:      #ff9500; --orab: rgba(255,149,0,0.10);
+  --blu:      #007aff; --blub: rgba(0,122,255,0.10);
+  --pur:      #af52de; --purb: rgba(175,82,222,0.10);
+  --r-xs:8px;--r-s:12px;--r-m:16px;--r-l:22px;--r-xl:28px;
+}
+[data-theme="dark"] {
+  --bg:#000;
+  --surface:#1c1c1e;
+  --glass:rgba(28,28,30,0.80);
+  --gb:rgba(255,255,255,0.10);
+  --gs:0 8px 32px rgba(0,0,0,0.45),0 1px 2px rgba(0,0,0,0.25);
+  --t1:#ffffff;--t2:#ebebf5;--t3:#8e8e93;--t4:#48484a;
+  --sep:rgba(255,255,255,0.10);
+  --fill:rgba(255,255,255,0.05);--fillh:rgba(255,255,255,0.09);
+  --gr:#30d158;--grd:#30d158;--grb:rgba(48,209,88,0.13);--grl:rgba(48,209,88,0.20);
+  --redb:rgba(255,69,58,0.15);--orab:rgba(255,159,10,0.15);
+  --blub:rgba(10,132,255,0.15);--purb:rgba(191,90,242,0.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,'SF Pro Text',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;letter-spacing:-0.011em;transition:background .3s,color .3s}
+.hidden{display:none!important}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--glass);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-bottom:.5px solid var(--gb)}
+.logo{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600;color:var(--t1);letter-spacing:-.3px}
+.logo-mark{width:30px;height:30px;border-radius:8px;background:var(--gr);display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:15px;height:15px}
+.nav-r{display:flex;align-items:center;gap:12px}
+.nav-badge{font-size:12px;font-weight:500;color:var(--grd);background:var(--grb);padding:4px 10px;border-radius:100px}
+
+/* Theme toggle */
+.tog{width:44px;height:26px;border-radius:13px;background:var(--fill);border:.5px solid var(--gb);cursor:pointer;position:relative;flex-shrink:0;transition:background .25s}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--t1);transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .25s}
+[data-theme="dark"] .tog::after{transform:translateX(18px);background:#f5f5f7}
+.tog-icon{font-size:12px;position:absolute;top:50%;transform:translateY(-50%);pointer-events:none}
+.tog-icon.s{left:5px}.tog-icon.m{right:4px}
+
+/* ── LAYOUT ── */
+main{flex:1;display:flex;justify-content:center;align-items:flex-start;padding:28px 16px 80px}
+.card{width:100%;max-width:540px;background:var(--glass);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border-radius:var(--r-xl);border:.5px solid var(--gb);box-shadow:var(--gs);overflow:hidden}
+
+/* ── FORM ── */
+.form-top{padding:32px 28px 24px;border-bottom:.5px solid var(--sep)}
+.eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--gr);margin-bottom:10px}
+.form-top h1{font-size:28px;font-weight:700;color:var(--t1);letter-spacing:-.6px;line-height:1.15;margin-bottom:6px}
+.form-top p{font-size:15px;color:var(--t3);line-height:1.5}
+.form-body{padding:24px 28px 28px}
+.sec-div{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);margin:24px 0 14px;display:flex;align-items:center;gap:10px}
+.sec-div::after{content:'';flex:1;height:.5px;background:var(--sep)}
+.sec-div:first-child{margin-top:0}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--t2);margin-bottom:7px}
+.field input,.field select{width:100%;height:46px;padding:0 14px;background:var(--surface);border:.5px solid var(--sep);border-radius:var(--r-s);font-family:inherit;font-size:15px;color:var(--t1);outline:none;transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none}
+.field input::placeholder{color:var(--t4)}
+.field input:focus,.field select:focus{border-color:var(--gr);box-shadow:0 0 0 3px var(--grl)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-hint{font-size:12px;color:var(--t3);margin-top:5px;line-height:1.4}
+.sel-wrap{position:relative}
+.sel-wrap::after{content:'';position:absolute;right:14px;top:50%;transform:translateY(-50%);width:9px;height:5px;background:var(--t3);clip-path:polygon(0 0,100% 0,50% 100%);pointer-events:none}
+.err-box{background:var(--redb);border:.5px solid var(--red);border-radius:var(--r-s);padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--red);display:flex;align-items:flex-start;gap:8px}
+.submit-btn{width:100%;height:52px;background:var(--gr);color:#fff;border:none;border-radius:var(--r-s);font-family:inherit;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:-.2px;transition:background .15s,transform .1s,box-shadow .15s;margin-top:8px;box-shadow:0 2px 12px rgba(52,199,89,.32)}
+.submit-btn:hover{background:var(--grd);box-shadow:0 4px 20px rgba(52,199,89,.42)}
+.submit-btn:active{transform:scale(.99)}
+
+/* ── LOADING ── */
+.loading-wrap{padding:72px 28px;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center}
+.spin{width:52px;height:52px;border-radius:50%;border:3px solid var(--sep);border-top-color:var(--gr);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-title{font-size:17px;font-weight:600;color:var(--t1)}
+.load-sub{font-size:13px;color:var(--t3);margin-top:4px}
+.dots{display:flex;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--sep);transition:background .3s}
+.dot.on{background:var(--gr)}
+
+/* ── RESULTS ── */
+.fade-up{animation:fadeUp .45s cubic-bezier(.16,1,.3,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.hero{padding:32px 28px;background:linear-gradient(145deg,#0a3d2b,#0f6e56 55%,#1a6b4a);position:relative;overflow:hidden}
+[data-theme="dark"] .hero{background:linear-gradient(145deg,#041a12,#082b1e 55%,#0d3d28)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top right,rgba(52,199,89,.15),transparent 65%)}
+.hero-meta{font-size:12px;font-weight:500;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;position:relative}
+.hero-num{font-size:68px;font-weight:200;color:#fff;letter-spacing:-3px;line-height:1;position:relative;font-variant-numeric:tabular-nums}
+.hero-unit{font-size:16px;color:rgba(255,255,255,.6);margin-top:6px;position:relative}
+.status-pill{display:inline-flex;align-items:center;gap:6px;margin-top:18px;padding:7px 14px;border-radius:100px;font-size:13px;font-weight:500;position:relative}
+.sp-good{background:rgba(48,209,88,.2);color:#a8f5be}
+.sp-warn{background:rgba(255,159,10,.2);color:#ffd085}
+.sp-bad{background:rgba(255,69,58,.2);color:#ffb3ad}
+.s-dot{width:7px;height:7px;border-radius:50%}
+.sp-good .s-dot{background:#a8f5be}.sp-warn .s-dot{background:#ffd085}.sp-bad .s-dot{background:#ffb3ad}
+.city-note{margin-top:10px;font-size:12px;color:rgba(255,255,255,.38);position:relative;line-height:1.5}
+
+.r-body{padding:24px 28px 28px}
+.sec-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:.5px;background:var(--sep)}
+
+/* Bars */
+.bar-item{margin-bottom:18px}
+.bar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+.bar-name{font-size:14px;font-weight:500;color:var(--t1)}
+.bar-val{font-size:13px;color:var(--t3)}
+.bar-track{height:7px;background:var(--fill);border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;width:0;border-radius:100px;transition:width 1.1s cubic-bezier(.16,1,.3,1)}
+.bar-scope{font-size:11px;color:var(--t4);margin-top:4px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.rule{height:.5px;background:var(--sep);margin:22px 0}
+
+/* Recs */
+.rec-item{display:flex;gap:14px;padding:14px;border-radius:var(--r-s);border:.5px solid var(--sep);background:var(--fill);margin-bottom:10px;transition:background .15s,border-color .15s}
+.rec-item:hover{background:var(--fillh);border-color:var(--gr)}
+.rec-num{width:26px;height:26px;border-radius:50%;background:var(--grb);color:var(--grd);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.rec-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:7px;line-height:1.4}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+.c-gr{background:var(--grb);color:var(--grd)}
+.c-or{background:var(--orab);color:var(--ora)}
+.c-re{background:var(--redb);color:var(--red)}
+.c-bl{background:var(--blub);color:var(--blu)}
+
+/* Savings */
+.sav-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.sav-box{background:var(--fill);border:.5px solid var(--sep);border-radius:var(--r-s);padding:16px 14px;text-align:center}
+.sav-val{font-size:22px;font-weight:700;color:var(--gr);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.sav-lbl{font-size:11px;color:var(--t3);margin-top:3px;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+
+/* Btns */
+.btn-stack{display:flex;flex-direction:column;gap:10px}
+.btn-gr{width:100%;height:50px;background:var(--gr);color:#fff;border:none;border-radius:var(--r-s);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,box-shadow .15s;box-shadow:0 2px 12px rgba(52,199,89,.28)}
+.btn-gr:hover{background:var(--grd)}.btn-gr:disabled{opacity:.5;cursor:not-allowed}
+.btn-gh{width:100%;height:46px;background:transparent;color:var(--t2);border:.5px solid var(--sep);border-radius:var(--r-s);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s}
+.btn-gh:hover{background:var(--fill)}
+.ai-note{text-align:center;font-size:11px;color:var(--t4);margin-top:10px}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:20px 16px;font-size:12px;color:var(--t4);border-top:.5px solid var(--sep)}
+footer a{color:var(--gr);text-decoration:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .form-top,.form-body,.r-body{padding-left:20px;padding-right:20px}
+  .hero{padding:26px 20px}
+  .hero-num{font-size:52px}
+  .field-row{grid-template-columns:1fr}
+  .sav-row{grid-template-columns:1fr}
+  .nav-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 15 15" fill="none">
+        <path d="M3 11C3 7.5 5 5 7.5 4C10 5 12 7.5 12 11" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M7.5 4v5" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="7.5" cy="10" r="1.2" fill="white"/>
+      </svg>
+    </div>
+    Carbon Lens
+  </div>
+  <div class="nav-r">
+    <span class="nav-badge">India's MSME Auditor</span>
+    <button class="tog" onclick="toggleTheme()" aria-label="Toggle theme">
+      <span class="tog-icon s">☀️</span>
+      <span class="tog-icon m">🌙</span>
+    </button>
+  </div>
+</nav>
+
+<main>
+  <div class="card">
+
+    <!-- FORM -->
+    <div id="fv">
+      <div class="form-top">
+        <div class="eyebrow">Free · 2 minutes</div>
+        <h1>Carbon Audit</h1>
+        <p>Get your full emissions breakdown, emission hotspots, and a personalised green roadmap for your business.</p>
+      </div>
+      <div class="form-body">
+        <div id="errBox" class="err-box hidden">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" style="flex-shrink:0;margin-top:1px">
+            <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M7.5 4.5v3.5M7.5 10v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          <span id="errMsg"></span>
+        </div>
+        <form id="auditForm" novalidate>
+
+          <div class="sec-div">Business</div>
+          <div class="field-row">
+            <div class="field">
+              <label>Business name</label>
+              <input type="text" id="bizName" placeholder="e.g. Sharma Textiles" required>
+            </div>
+            <div class="field">
+              <label>Industry</label>
+              <div class="sel-wrap">
+                <select id="bizType" required>
+                  <option value="">Select…</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                  <option value="Textile">Textile / Garments</option>
+                  <option value="Retail">Retail / Trade</option>
+                  <option value="Restaurant">Restaurant / Food</option>
+                  <option value="IT">IT / Office</option>
+                  <option value="Logistics">Logistics / Transport</option>
+                  <option value="Construction">Construction</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>City</label>
+              <div class="sel-wrap">
+                <select id="bizCity" required>
+                  <option value="">Select city…</option>
+                  <optgroup label="── Tier 1 · Metro ──">
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi / NCR</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Kolkata">Kolkata</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Pune">Pune</option>
+                    <option value="Ahmedabad">Ahmedabad</option>
+                  </optgroup>
+                  <optgroup label="── Tier 2 · Major Cities ──">
+                    <option value="Surat">Surat</option>
+                    <option value="Jaipur">Jaipur</option>
+                    <option value="Lucknow">Lucknow</option>
+                    <option value="Kanpur">Kanpur</option>
+                    <option value="Nagpur">Nagpur</option>
+                    <option value="Indore">Indore</option>
+                    <option value="Bhopal">Bhopal</option>
+                    <option value="Patna">Patna</option>
+                    <option value="Vadodara">Vadodara</option>
+                    <option value="Ludhiana">Ludhiana</option>
+                    <option value="Agra">Agra</option>
+                    <option value="Nashik">Nashik</option>
+                    <option value="Coimbatore">Coimbatore</option>
+                    <option value="Vijayawada">Vijayawada</option>
+                    <option value="Visakhapatnam">Visakhapatnam</option>
+                    <option value="Kochi">Kochi</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Bhubaneswar">Bhubaneswar</option>
+                    <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+                    <option value="Guwahati">Guwahati</option>
+                    <option value="Rajkot">Rajkot</option>
+                    <option value="Meerut">Meerut</option>
+                    <option value="Varanasi">Varanasi</option>
+                    <option value="Amritsar">Amritsar</option>
+                    <option value="Jodhpur">Jodhpur</option>
+                    <option value="Ranchi">Ranchi</option>
+                    <option value="Jabalpur">Jabalpur</option>
+                    <option value="Gwalior">Gwalior</option>
+                    <option value="Madurai">Madurai</option>
+                    <option value="Raipur">Raipur</option>
+                    <option value="Faridabad">Faridabad</option>
+                    <option value="Ghaziabad">Ghaziabad</option>
+                    <option value="Noida">Noida</option>
+                    <option value="Gurugram">Gurugram</option>
+                  </optgroup>
+                  <optgroup label="── Tier 3 · Emerging Cities ──">
+                    <option value="Mysuru">Mysuru</option>
+                    <option value="Mangaluru">Mangaluru</option>
+                    <option value="Tiruchirappalli">Tiruchirappalli</option>
+                    <option value="Tiruppur">Tiruppur</option>
+                    <option value="Udaipur">Udaipur</option>
+                    <option value="Kota">Kota</option>
+                    <option value="Ajmer">Ajmer</option>
+                    <option value="Aligarh">Aligarh</option>
+                    <option value="Moradabad">Moradabad</option>
+                    <option value="Bareilly">Bareilly</option>
+                    <option value="Dehradun">Dehradun</option>
+                    <option value="Haridwar">Haridwar</option>
+                    <option value="Jammu">Jammu</option>
+                    <option value="Shimla">Shimla</option>
+                    <option value="Srinagar">Srinagar</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Vellore">Vellore</option>
+                    <option value="Salem">Salem</option>
+                    <option value="Hubli">Hubli</option>
+                    <option value="Belgaum">Belgaum</option>
+                    <option value="Kolhapur">Kolhapur</option>
+                    <option value="Aurangabad">Aurangabad</option>
+                    <option value="Solapur">Solapur</option>
+                    <option value="Amravati">Amravati</option>
+                    <option value="Dhanbad">Dhanbad</option>
+                    <option value="Asansol">Asansol</option>
+                    <option value="Siliguri">Siliguri</option>
+                    <option value="Imphal">Imphal</option>
+                    <option value="Agartala">Agartala</option>
+                    <option value="Shillong">Shillong</option>
+                    <option value="Panaji">Panaji</option>
+                    <option value="Other">Other / Smaller city</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Employees</label>
+              <input type="number" id="bizEmp" placeholder="e.g. 20" min="1">
+            </div>
+          </div>
+
+          <div class="sec-div">Monthly energy use</div>
+          <div class="field">
+            <label>Electricity (kWh / units)</label>
+            <input type="number" id="elecKwh" placeholder="e.g. 8000" min="0">
+            <div class="field-hint">Check your DISCOM bill. 1 printed unit = 1 kWh.</div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Diesel — generator (litres)</label>
+              <input type="number" id="dieselL" placeholder="0 if none" min="0">
+            </div>
+            <div class="field">
+              <label>Fuel — vehicles (litres)</label>
+              <input type="number" id="fuelL" placeholder="0 if none" min="0">
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">Calculate Carbon Footprint →</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div id="lv" class="hidden">
+      <div class="loading-wrap">
+        <div class="spin"></div>
+        <div>
+          <div class="load-title" id="lt">Calculating emissions…</div>
+          <div class="load-sub" id="ls">Using city-specific grid factor</div>
+        </div>
+        <div class="dots">
+          <div class="dot on" id="d1"></div>
+          <div class="dot" id="d2"></div>
+          <div class="dot" id="d3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="rv" class="hidden fade-up">
+      <div id="heroBlock"></div>
+      <div class="r-body" id="rBody"></div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Built by Soumya · Udit · Vedant · Vijjval &nbsp;·&nbsp;
+  Data: India CEA, GHG Protocol, DEFRA &nbsp;·&nbsp;
+  <a href="https://github.com/soumyax007/Riptide_Carbon-Lens" target="_blank">GitHub ↗</a>
+</footer>
+
+<script>
+/* ── CONFIG ── */
+const API_KEY = 'YOUR_ANTHROPIC_API_KEY_HERE';
+
+/* ── THEME ── */
+function toggleTheme() {
+  const h = document.documentElement;
+  const dark = h.getAttribute('data-theme') === 'dark';
+  h.setAttribute('data-theme', dark ? 'light' : 'dark');
+  localStorage.setItem('cl-theme', dark ? 'light' : 'dark');
+}
+(function(){
+  const s = localStorage.getItem('cl-theme');
+  if (s) document.documentElement.setAttribute('data-theme', s);
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+/* ── CITY DATA ── */
+const CITIES = {
+  'Mumbai':            { grid:0.75, state:'Maharashtra', region:'Western',    note:'Mumbai grid is cleaner than national avg due to Tata Power renewable mix. Rooftop solar has strong ROI here.' },
+  'Delhi':             { grid:0.90, state:'Delhi',        region:'Northern',   note:'Delhi grid is highly coal-dependent. Switching to solar or LED has among the highest CO₂ and ₹ savings in India.' },
+  'Bengaluru':         { grid:0.82, state:'Karnataka',   region:'Southern',   note:'BESCOM grid includes significant hydro capacity. EV adoption and rooftop solar are growing fast.' },
+  'Chennai':           { grid:0.85, state:'Tamil Nadu',  region:'Southern',   note:'Tamil Nadu has strong wind energy. Grid intensity is moderate and improving year on year.' },
+  'Kolkata':           { grid:0.92, state:'West Bengal', region:'Eastern',    note:'Eastern grid is among India\'s most coal-dependent. Energy efficiency measures have the highest per-rupee impact here.' },
+  'Hyderabad':         { grid:0.83, state:'Telangana',   region:'Southern',   note:'Telangana has invested heavily in utility-scale solar. Grid emission factor is improving rapidly.' },
+  'Pune':              { grid:0.76, state:'Maharashtra', region:'Western',    note:'Pune benefits from MSEDCL renewable mix — one of the cleaner metro grids in India.' },
+  'Ahmedabad':         { grid:0.84, state:'Gujarat',     region:'Western',    note:'Gujarat is a solar leader with ambitious targets. Industrial zones benefit from green energy procurement options.' },
+  'Surat':             { grid:0.84, state:'Gujarat',     region:'Western',    note:'Surat textile industry is energy-intensive. State solar subsidies are available for MSMEs.' },
+  'Jaipur':            { grid:0.88, state:'Rajasthan',   region:'Northern',   note:'Rajasthan gets 330+ sunny days/year — one of India\'s best locations for rooftop solar ROI.' },
+  'Lucknow':           { grid:0.91, state:'UP',          region:'Northern',   note:'UP grid is coal-heavy. Energy efficiency and solar both have excellent financial returns here.' },
+  'Kanpur':            { grid:0.91, state:'UP',          region:'Northern',   note:'Industrial Kanpur has high grid intensity. LED and solar investments pay back within 2–3 years.' },
+  'Nagpur':            { grid:0.80, state:'Maharashtra', region:'Central',    note:'MSEDCL coverage with moderate renewable mix. Central India grid.' },
+  'Indore':            { grid:0.87, state:'MP',          region:'Central',    note:'India\'s cleanest city. Good solar irradiance — rooftop systems are increasingly popular here.' },
+  'Bhopal':            { grid:0.87, state:'MP',          region:'Central',    note:'MP grid is improving with solar additions. State has MSME solar loan schemes.' },
+  'Patna':             { grid:0.93, state:'Bihar',       region:'Eastern',    note:'Bihar has one of India\'s most coal-intensive grids. Every kWh saved here has above-average CO₂ impact.' },
+  'Vadodara':          { grid:0.84, state:'Gujarat',     region:'Western',    note:'Gujarat solar push benefits Vadodara industries. MSME solar financing available.' },
+  'Ludhiana':          { grid:0.89, state:'Punjab',      region:'Northern',   note:'Punjab industry is power-hungry. Agri-residue burning adds air quality concerns alongside grid emissions.' },
+  'Agra':              { grid:0.91, state:'UP',          region:'Northern',   note:'UP coal-heavy grid. Solar and LED offer strong returns given high emission intensity.' },
+  'Nashik':            { grid:0.78, state:'Maharashtra', region:'Western',    note:'Nashik benefits from MSEDCL grid with renewable additions. Wine and manufacturing industries prominent.' },
+  'Coimbatore':        { grid:0.82, state:'Tamil Nadu',  region:'Southern',   note:'TN wind belt nearby. Coimbatore MSMEs can access green energy procurement at competitive rates.' },
+  'Vijayawada':        { grid:0.83, state:'Andhra Pradesh', region:'Southern',note:'AP renewable push benefits Vijayawada industries. Grid factor improving with solar additions.' },
+  'Visakhapatnam':     { grid:0.83, state:'Andhra Pradesh', region:'Southern',note:'AP has strong wind and solar capacity. Port city with significant industrial energy use.' },
+  'Kochi':             { grid:0.79, state:'Kerala',      region:'Southern',   note:'Kerala has strong hydro base — one of the cleaner grids in south India.' },
+  'Chandigarh':        { grid:0.87, state:'Punjab/Haryana', region:'Northern',note:'Well-planned UT with growing green infra. Solar subsidies available for MSMEs.' },
+  'Bhubaneswar':       { grid:0.89, state:'Odisha',      region:'Eastern',    note:'Odisha grid is coal-heavy but improving. Smart city initiative ongoing.' },
+  'Thiruvananthapuram':{ grid:0.79, state:'Kerala',      region:'Southern',   note:'Kerala hydro grid — relatively clean. Strong state support for energy efficiency.' },
+  'Guwahati':          { grid:0.85, state:'Assam',       region:'North East', note:'NE India relies on hydro but distribution losses are high. Efficiency gains are significant.' },
+  'Rajkot':            { grid:0.83, state:'Gujarat',     region:'Western',    note:'Gujarat solar leadership benefits Rajkot SMEs. MSME solar loans are widely available.' },
+  'Meerut':            { grid:0.91, state:'UP',          region:'Northern',   note:'UP coal-heavy grid. Smart metering rollout underway. Solar ROI is high.' },
+  'Varanasi':          { grid:0.91, state:'UP',          region:'Northern',   note:'UP grid is coal-intensive. Cultural city with growing tourism-linked energy demand.' },
+  'Amritsar':          { grid:0.89, state:'Punjab',      region:'Northern',   note:'Punjab industrial grid. Agriculture-linked power demand is high seasonally.' },
+  'Jodhpur':           { grid:0.87, state:'Rajasthan',   region:'Northern',   note:'Jodhpur gets abundant sunshine — excellent solar irradiance year-round. Strong ROI on solar.' },
+  'Ranchi':            { grid:0.92, state:'Jharkhand',   region:'Eastern',    note:'Jharkhand has significant coal infrastructure. Grid is coal-heavy — efficiency has high impact.' },
+  'Jabalpur':          { grid:0.87, state:'MP',          region:'Central',    note:'MP grid improving with solar. Industrial and defence manufacturing city.' },
+  'Gwalior':           { grid:0.87, state:'MP',          region:'Central',    note:'MP grid with moderate renewable additions. Historic city with growing industry.' },
+  'Madurai':           { grid:0.82, state:'Tamil Nadu',  region:'Southern',   note:'TN wind power adds clean energy to Madurai grid. Textile and manufacturing base.' },
+  'Raipur':            { grid:0.93, state:'Chhattisgarh', region:'Central',   note:'Steel city with coal-intensive grid — among India\'s highest emission factors. Efficiency is critical.' },
+  'Faridabad':         { grid:0.90, state:'Haryana',     region:'Northern',   note:'Industrial Faridabad. Haryana grid is coal-heavy. Solar ROI is excellent given high intensity.' },
+  'Ghaziabad':         { grid:0.91, state:'UP',          region:'Northern',   note:'NCR belt with coal-heavy UP grid. Strong push for rooftop solar from state policies.' },
+  'Noida':             { grid:0.90, state:'UP',          region:'Northern',   note:'NCR grid is coal-intensive. Corporate sustainability pressure is high. Solar adoption growing.' },
+  'Gurugram':          { grid:0.90, state:'Haryana',     region:'Northern',   note:'Haryana coal-heavy grid. High corporate sustainability focus — many MNCs set green targets.' },
+  'Mysuru':            { grid:0.82, state:'Karnataka',   region:'Southern',   note:'CESC Mysuru grid with hydro component. Palace city with tourism and manufacturing base.' },
+  'Mangaluru':         { grid:0.80, state:'Karnataka',   region:'Southern',   note:'Karnataka grid includes hydro. Port city with petroleum and manufacturing.' },
+  'Tiruchirappalli':   { grid:0.82, state:'Tamil Nadu',  region:'Southern',   note:'TN wind energy contribution. Industrial hub with textile and manufacturing.' },
+  'Tiruppur':          { grid:0.82, state:'Tamil Nadu',  region:'Southern',   note:'Tiruppur knitwear capital — highly energy-intensive textile industry.' },
+  'Udaipur':           { grid:0.87, state:'Rajasthan',   region:'Northern',   note:'Rajasthan solar potential is excellent. Tourism and marble industry dominate.' },
+  'Kota':              { grid:0.87, state:'Rajasthan',   region:'Northern',   note:'Education hub with chemical and fertiliser industries. Solar is highly viable.' },
+  'Dehradun':          { grid:0.84, state:'Uttarakhand', region:'Northern',   note:'Uttarakhand has hydro resources. Relatively cleaner grid than plains UP/Haryana.' },
+  'Haridwar':          { grid:0.84, state:'Uttarakhand', region:'Northern',   note:'Industrial belt near Haridwar. Hydro-supplemented grid. Pilgrim city with growing industry.' },
+  'Jammu':             { grid:0.86, state:'J&K',         region:'Northern',   note:'J&K has hydro potential. Grid situation improving with national grid integration.' },
+  'Shimla':            { grid:0.84, state:'Himachal Pradesh', region:'Northern', note:'HP has significant hydro power. Grid is relatively clean. Tourism-led economy.' },
+  'Srinagar':          { grid:0.86, state:'J&K',         region:'Northern',   note:'J&K hydro resources significant. High diesel dependency due to grid reliability issues.' },
+  'Puducherry':        { grid:0.83, state:'Puducherry',  region:'Southern',   note:'UT connected to TN grid. French-influenced city with tourism and IT services.' },
+  'Vellore':           { grid:0.83, state:'Tamil Nadu',  region:'Southern',   note:'TN grid with wind additions. Healthcare and leather manufacturing hub.' },
+  'Salem':             { grid:0.82, state:'Tamil Nadu',  region:'Southern',   note:'TN grid. Steel and textiles dominant. Wind energy contribution significant.' },
+  'Hubli':             { grid:0.82, state:'Karnataka',   region:'Southern',   note:'Karnataka grid. Twin city with Dharwad. Cotton and manufacturing hub.' },
+  'Belgaum':           { grid:0.82, state:'Karnataka',   region:'Southern',   note:'Karnataka grid. Border city with sugar and manufacturing industry.' },
+  'Kolhapur':          { grid:0.78, state:'Maharashtra', region:'Western',    note:'MSEDCL grid with renewables. Sugar, foundry and textile industries.' },
+  'Aurangabad':        { grid:0.80, state:'Maharashtra', region:'Central',    note:'MSEDCL coverage. Automotive and manufacturing hub of Marathwada.' },
+  'Solapur':           { grid:0.80, state:'Maharashtra', region:'Western',    note:'MSEDCL grid. Textile, sugar and leather industries.' },
+  'Amravati':          { grid:0.80, state:'Maharashtra', region:'Central',    note:'MSEDCL coverage. Agricultural processing and textile city.' },
+  'Dhanbad':           { grid:0.93, state:'Jharkhand',   region:'Eastern',    note:'Coal city — one of India\'s highest grid emission factors. Efficiency measures have maximum impact.' },
+  'Asansol':           { grid:0.92, state:'West Bengal', region:'Eastern',    note:'Eastern grid — coal-heavy. Industrial city with steel and coal-based industries.' },
+  'Siliguri':          { grid:0.87, state:'West Bengal', region:'Eastern',    note:'Gateway to North East. Trade hub with growing retail and logistics sectors.' },
+  'Imphal':            { grid:0.85, state:'Manipur',     region:'North East', note:'NE India hydro grid. Distribution losses can be high. Off-grid solar is viable.' },
+  'Agartala':          { grid:0.85, state:'Tripura',     region:'North East', note:'NE India grid. Natural gas power plants supplement hydro.' },
+  'Shillong':          { grid:0.84, state:'Meghalaya',   region:'North East', note:'Meghalaya has hydro resources. Cool climate reduces AC load.' },
+  'Panaji':            { grid:0.78, state:'Goa',         region:'Western',    note:'Goa grid benefits from Maharashtra grid connection. Tourism-dominated economy.' },
+  'Other':             { grid:0.82, state:'India',       region:'India',      note:'Using India national average grid factor (CEA 2024: 0.82 kg CO₂/kWh). Select your city for more accurate results.' }
+};
+
+function cityData(c) { return CITIES[c] || CITIES['Other']; }
+
+/* ── STATE ── */
+let result = {};
+let loadT  = null;
+
+/* ── FORM ── */
+document.getElementById('auditForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  clearErr();
+  const bizName = g('bizName').value.trim();
+  const bizType = g('bizType').value;
+  const bizCity = g('bizCity').value;
+  const bizEmp  = parseInt(g('bizEmp').value);
+  const elecKwh = parseFloat(g('elecKwh').value);
+  const dieselL = parseFloat(g('dieselL').value) || 0;
+  const fuelL   = parseFloat(g('fuelL').value)   || 0;
+
+  if (!bizName)             return err('Please enter your business name.');
+  if (!bizType)             return err('Please select your industry.');
+  if (!bizCity)             return err('Please select your city.');
+  if (!bizEmp || bizEmp<1)  return err('Please enter number of employees (minimum 1).');
+  if (isNaN(elecKwh)||elecKwh<0) return err('Please enter your monthly electricity usage in kWh.');
+
+  hide('fv'); show('lv'); startLoader();
+  const fd = { bizName, bizType, bizCity, bizEmp, elecKwh, dieselL, fuelL };
+  try { await run(fd); }
+  catch(e) {
+    clearInterval(loadT); hide('lv'); show('fv');
+    err('Something went wrong — ' + (e.message||'please try again.'));
+  }
+});
+
+/* ── LOADER ── */
+function startLoader() {
+  const steps = [
+    ['Calculating emissions…','Using city-specific grid factor'],
+    ['Benchmarking against peers…','Comparing similar Indian MSMEs'],
+    ['Generating your roadmap…','Powered by Claude AI']
+  ];
+  let i = 0;
+  const tick = () => {
+    g('lt').textContent = steps[i][0];
+    g('ls').textContent = steps[i][1];
+    ['d1','d2','d3'].forEach((id,j) => g(id).classList.toggle('on', j<=i));
+    i = (i+1) % steps.length;
+  };
+  tick();
+  loadT = setInterval(tick, 1800);
+}
+
+/* ── EMISSIONS ── */
+function calc(fd) {
+  const cd = cityData(fd.bizCity);
+  const gf = cd.grid;
+  const elec   = +(fd.elecKwh * gf   * 12 / 1000).toFixed(2);
+  const diesel = +(fd.dieselL  * 2.68 * 12 / 1000).toFixed(2);
+  const fuel   = +(fd.fuelL   * 2.31 * 12 / 1000).toFixed(2);
+  const supply = +((fd.bizEmp * 0.5) + (elec * 0.3)).toFixed(2);
+  const total  = +(elec + diesel + fuel + supply).toFixed(2);
+  return { elec, diesel, fuel, supply, total, gf };
+}
+
+/* ── CLAUDE API ── */
+async function getRecs(fd, ems) {
+  const keySet = API_KEY && API_KEY !== 'YOUR_ANTHROPIC_API_KEY_HERE';
+  if (keySet) {
+    try {
+      const cd = cityData(fd.bizCity);
+      const res = await Promise.race([
+        fetch('https://api.anthropic.com/v1/messages', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 900,
+            messages:[{role:'user',content:`You are a carbon reduction advisor for Indian MSMEs.
+Business: ${fd.bizType} in ${fd.bizCity} (${cd.state}), ${fd.bizEmp} employees.
+Grid: ${cd.grid} kg CO₂/kWh (${cd.region} India). City context: ${cd.note}
+Annual emissions: Elec ${ems.elec}T, Diesel ${ems.diesel}T, Vehicles ${ems.fuel}T, Supply ${ems.supply}T, TOTAL ${ems.total}T CO₂e.
+Give 3 specific actionable recommendations for THIS city and industry.
+Reply ONLY with raw JSON array, no markdown, no text outside:
+[{"action":"concise action under 10 words","co2Saved":number,"inrSaved":number,"difficulty":"Easy"}]
+Rules: co2Saved 0.5-40 t/yr, inrSaved 5000-150000 INR/yr, difficulty=Easy|Medium|Hard`}]
+          })
+        }),
+        new Promise((_,r) => setTimeout(() => r(new Error('timeout')), 12000))
+      ]);
+      if (!res.ok) throw new Error('HTTP '+res.status);
+      const data = await res.json();
+      const clean = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+      const arr = JSON.parse(clean);
+      if (Array.isArray(arr) && arr.length) return arr.slice(0,3);
+      throw new Error('bad format');
+    } catch(e) { console.warn('[CL] API failed:',e.message,'→ fallback'); }
+  }
+  return fallback(fd, ems);
+}
+
+function fallback(fd, ems) {
+  const { elec, diesel, supply } = ems;
+  const cd = cityData(fd.bizCity);
+  const solar  = ['Jaipur','Jodhpur','Rajkot','Ahmedabad','Surat','Vadodara','Indore','Udaipur','Kota'].includes(fd.bizCity);
+  const hCoal  = ['Delhi','Kolkata','Patna','Raipur','Lucknow','Kanpur','Ghaziabad','Ranchi','Dhanbad','Asansol'].includes(fd.bizCity);
+  const sco2   = solar ? +(elec*.42).toFixed(1) : +(elec*.30).toFixed(1);
+  const sinr   = solar ? 95000 : 75000;
+  const led    = hCoal ? 22000 : 15000;
+  const by = {
+    Manufacturing:[
+      {action:'Install VFDs on all major motors',           co2Saved:+(elec*.12).toFixed(1), inrSaved:35000, difficulty:'Medium'},
+      {action:'Full LED upgrade with motion sensors',       co2Saved:+(elec*.09).toFixed(1), inrSaved:led,   difficulty:'Easy'},
+      {action:'Install 10 kW rooftop solar system',         co2Saved:sco2,                   inrSaved:sinr,  difficulty:'Hard'}],
+    Textile:[
+      {action:'Solar water heating for dyeing process',     co2Saved:+(elec*.18).toFixed(1), inrSaved:42000, difficulty:'Medium'},
+      {action:'LED upgrade on production floor',            co2Saved:+(elec*.09).toFixed(1), inrSaved:led,   difficulty:'Easy'},
+      {action:'Source cotton within 200 km radius',        co2Saved:+(supply*.12).toFixed(1),inrSaved:8000,  difficulty:'Hard'}],
+    Restaurant:[
+      {action:'Energy-efficient burners + induction hobs', co2Saved:+(elec*.20).toFixed(1), inrSaved:24000, difficulty:'Easy'},
+      {action:'Optimise refrigeration + seal all doors',   co2Saved:+(elec*.12).toFixed(1), inrSaved:12000, difficulty:'Easy'},
+      {action:'Source vegetables from farms under 50 km',  co2Saved:+(supply*.15).toFixed(1),inrSaved:6000,  difficulty:'Medium'}],
+    IT:[
+      {action:'Power management on all PCs and ACs',       co2Saved:+(elec*.15).toFixed(1), inrSaved:14000, difficulty:'Easy'},
+      {action:'Switch to Energy Star certified equipment', co2Saved:+(elec*.10).toFixed(1), inrSaved:8000,  difficulty:'Medium'},
+      {action:'WFH 2 days/week + green travel policy',     co2Saved:+(supply*.20).toFixed(1),inrSaved:5000,  difficulty:'Easy'}],
+    Logistics:[
+      {action:'Route optimisation to cut idle time',       co2Saved:+(diesel*.15).toFixed(1),inrSaved:40000, difficulty:'Medium'},
+      {action:'Transition 20% fleet to CNG vehicles',     co2Saved:+(diesel*.20).toFixed(1),inrSaved:55000, difficulty:'Hard'},
+      {action:'Tyre pressure monitoring system',           co2Saved:+(diesel*.05).toFixed(1),inrSaved:12000, difficulty:'Easy'}],
+    Retail:[
+      {action:'LED lighting + daylight sensors in store',  co2Saved:+(elec*.15).toFixed(1), inrSaved:16000, difficulty:'Easy'},
+      {action:'AC at 24°C + upgrade to inverter units',   co2Saved:+(elec*.12).toFixed(1), inrSaved:14000, difficulty:'Easy'},
+      {action:'Consolidate supplier deliveries (fewer trips)',co2Saved:+(supply*.10).toFixed(1),inrSaved:8000,difficulty:'Medium'}],
+    Construction:[
+      {action:'Use fly-ash bricks instead of burnt clay',  co2Saved:+(supply*.14).toFixed(1),inrSaved:12000, difficulty:'Easy'},
+      {action:'On-site solar for tools and site lighting', co2Saved:sco2,                   inrSaved:30000, difficulty:'Medium'},
+      {action:'Source steel from EAF mills',               co2Saved:+(supply*.18).toFixed(1),inrSaved:15000, difficulty:'Hard'}],
+    Healthcare:[
+      {action:'LED + occupancy sensors in corridors',      co2Saved:+(elec*.12).toFixed(1), inrSaved:18000, difficulty:'Easy'},
+      {action:'Medical waste segregation to cut transport',co2Saved:+(supply*.08).toFixed(1),inrSaved:8000,  difficulty:'Medium'},
+      {action:'Solar water heater for sterilisation',      co2Saved:+(elec*.14).toFixed(1), inrSaved:22000, difficulty:'Medium'}],
+    Education:[
+      {action:'Solar panels on school rooftop',            co2Saved:sco2,                   inrSaved:sinr,  difficulty:'Hard'},
+      {action:'LED classroom lighting upgrade',            co2Saved:+(elec*.12).toFixed(1), inrSaved:led,   difficulty:'Easy'},
+      {action:'Rainwater harvesting + paperless admin',    co2Saved:+(supply*.05).toFixed(1),inrSaved:5000,  difficulty:'Easy'}]
+  };
+  return by[fd.bizType] || [
+    {action:'Switch to LED lighting and BLDC fans',        co2Saved:+(elec*.12).toFixed(1), inrSaved:led,  difficulty:'Easy'},
+    {action:'Install 5 kW rooftop solar system',           co2Saved:sco2,                  inrSaved:sinr, difficulty:'Hard'},
+    {action:'Localise top 3 suppliers within state',      co2Saved:+(supply*.10).toFixed(1),inrSaved:8000, difficulty:'Medium'}
+  ];
+}
+
+/* ── RUNNER ── */
+async function run(fd) {
+  const ems  = calc(fd);
+  const recs = await getRecs(fd, ems);
+  clearInterval(loadT);
+  const tCo2 = recs.reduce((a,r) => a + parseFloat(r.co2Saved||0), 0);
+  const tInr = recs.reduce((a,r) => a + parseInt(r.inrSaved||0), 0);
+  result = { ...fd, ems, recs,
+    tCo2: tCo2.toFixed(1), tInr,
+    date: new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}),
+    aiOn: API_KEY && API_KEY !== 'YOUR_ANTHROPIC_API_KEY_HERE'
+  };
+  render();
+}
+
+/* ── RENDER ── */
+function render() {
+  hide('lv'); show('rv');
+  const { ems, recs, bizName, bizType, bizCity, date, tCo2, tInr, aiOn } = result;
+  const { total, elec, diesel, fuel, supply, gf } = ems;
+  const cd = cityData(bizCity);
+
+  let sc='sp-warn', st='Average for your sector';
+  if (total < 20) { sc='sp-good'; st='Below average — well done!'; }
+  else if (total > 60) { sc='sp-bad'; st='Above average — action needed'; }
+
+  g('heroBlock').innerHTML = `
+    <div class="hero">
+      <div class="hero-meta">${bizName} · ${bizType} · ${bizCity}</div>
+      <div class="hero-num">${total.toFixed(1)}</div>
+      <div class="hero-unit">tonnes CO₂e per year</div>
+      <div class="status-pill ${sc}"><div class="s-dot"></div>${st}</div>
+      <div class="city-note">${cd.note}</div>
+    </div>`;
+
+  const bars = [
+    {name:'Electricity (grid)',  scope:'Scope 2', val:elec,   color:'var(--gr)',  pct:pct(elec,total)},
+    {name:'Diesel generators',   scope:'Scope 1', val:diesel, color:'var(--ora)', pct:pct(diesel,total)},
+    {name:'Vehicle fuel',        scope:'Scope 1', val:fuel,   color:'var(--blu)', pct:pct(fuel,total)},
+    {name:'Supply chain (est.)', scope:'Scope 3', val:supply, color:'var(--pur)', pct:pct(supply,total)}
+  ].filter(b => b.val > 0);
+
+  const bHtml = bars.map((b,i) => `
+    <div class="bar-item">
+      <div class="bar-top">
+        <span class="bar-name">${b.name}</span>
+        <span class="bar-val">${b.val.toFixed(2)} T &nbsp;${b.pct}%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bf${i}" style="background:${b.color}"></div></div>
+      <div class="bar-scope">${b.scope} · Grid: ${gf} kg CO₂/kWh · ${cd.region} India</div>
+    </div>`).join('');
+
+  const rHtml = recs.map((r,i) => `
+    <div class="rec-item">
+      <div class="rec-num">${i+1}</div>
+      <div style="flex:1">
+        <div class="rec-title">${r.action}</div>
+        <div class="chips">
+          <span class="chip c-gr">Save ${r.co2Saved} T CO₂/yr</span>
+          <span class="chip c-bl">₹${Number(r.inrSaved).toLocaleString('en-IN')}/yr</span>
+          <span class="chip ${dc(r.difficulty)}">${r.difficulty}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  g('rBody').innerHTML = `
+    <div class="sec-title">Emissions breakdown</div>
+    ${bHtml}
+    <div class="rule"></div>
+    <div class="sec-title">Recommended actions</div>
+    ${rHtml}
+    <div class="rule"></div>
+    <div class="sec-title">If you do all 3</div>
+    <div class="sav-row">
+      <div class="sav-box"><div class="sav-val">${tCo2} T</div><div class="sav-lbl">CO₂ saved / year</div></div>
+      <div class="sav-box"><div class="sav-val">₹${Number(tInr).toLocaleString('en-IN')}</div><div class="sav-lbl">Cash saved / year</div></div>
+    </div>
+    <div class="btn-stack">
+      <button class="btn-gr" id="pdfBtn" onclick="makePDF()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v8M4.5 7l3 3 3-3M2 13h11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Download PDF Report
+      </button>
+      <button class="btn-gh" onclick="location.reload()">Start new audit</button>
+    </div>
+    <div class="ai-note">${aiOn ? '● Recommendations by Claude AI' : '● Offline recommendations (add API key for AI advice)'}</div>`;
+
+  requestAnimationFrame(() => setTimeout(() => {
+    bars.forEach((b,i) => { const el=g('bf'+i); if(el) el.style.width=Math.min(100,b.pct)+'%'; });
+  }, 80));
+}
+
+/* ── PDF ── */
+async function makePDF() {
+  const btn = g('pdfBtn');
+  if (!btn) return;
+  btn.disabled = true; btn.textContent = 'Generating…';
+  try {
+    const { jsPDF } = window.jspdf;
+    if (!jsPDF) throw new Error('jsPDF not loaded — check internet connection.');
+    const { ems, recs, bizName, bizType, bizCity, date, tCo2, tInr } = result;
+    const { total, elec, diesel, fuel, supply, gf } = ems;
+    const cd = cityData(bizCity);
+    const doc = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210, M=20; let y=0;
+    const sf=(st,sz,r,gr,b)=>{ doc.setFont('helvetica',st); doc.setFontSize(sz); if(r!==undefined) doc.setTextColor(r,gr,b); };
+    const tx=(s,x,yy,o)=>doc.text(s,x,yy,o);
+    const ln=(x1,y1,x2,y2)=>doc.line(x1,y1,x2,y2);
+
+    doc.setFillColor(15,78,53); doc.rect(0,0,W,38,'F');
+    doc.setFillColor(48,209,88); doc.rect(0,34,W,5,'F');
+    sf('bold',20,255,255,255); tx('Carbon Lens',M,15);
+    sf('normal',9,159,225,203); tx("India's MSME Carbon Auditor",M,22);
+    tx(`${bizName}  ·  ${bizType}  ·  ${bizCity}`,W-M,15,{align:'right'});
+    tx(`Generated ${date}`,W-M,22,{align:'right'});
+    y=50;
+
+    sf('normal',10,122,149,137); tx('ANNUAL CARBON FOOTPRINT',M,y); y+=8;
+    sf('bold',38,15,28,20); tx(total.toFixed(2),M,y);
+    sf('normal',14,122,149,137); tx('  tonnes CO₂e',M+46,y); y+=7;
+    sf('normal',9,122,149,137);
+    tx(`City grid: ${gf} kg CO₂/kWh  ·  ${cd.region} India  ·  ${cd.state}`,M,y); y+=5;
+    doc.setDrawColor(220,238,231); doc.setLineWidth(.5); ln(M,y,W-M,y); y+=9;
+
+    sf('bold',9,122,149,137);
+    tx('SOURCE',M,y); tx('SCOPE',108,y); tx('TONNES CO₂e/YR',134,y); tx('SHARE',175,y); y+=4;
+    ln(M,y,W-M,y); y+=6;
+    const rows=[
+      ['Electricity (grid)','2',elec.toFixed(2),(elec/total*100).toFixed(1)+'%'],
+      ['Diesel generators','1',diesel.toFixed(2),(diesel/total*100).toFixed(1)+'%'],
+      ['Vehicle fuel','1',fuel.toFixed(2),(fuel/total*100).toFixed(1)+'%'],
+      ['Supply chain (est.)','3',supply.toFixed(2),(supply/total*100).toFixed(1)+'%'],
+      ['TOTAL','',total.toFixed(2),'100%']
+    ];
+    rows.forEach((r,i)=>{
+      const last=i===rows.length-1;
+      if(last){doc.setFillColor(240,253,244);doc.rect(M-2,y-4,W-M*2+4,9,'F');sf('bold',10,15,110,86);}
+      else sf('normal',10,15,28,20);
+      tx(r[0],M,y);tx(r[1],108,y);tx(r[2],134,y);tx(r[3],175,y);y+=9;
+      if(!last){doc.setDrawColor(240,245,242);ln(M,y-3,W-M,y-3);}
+    });
+    y+=6; ln(M,y,W-M,y); y+=10;
+
+    sf('bold',9,122,149,137); tx('CITY INSIGHT',M,y); y+=7;
+    sf('normal',10,15,28,20);
+    const lines=doc.splitTextToSize(cd.note,W-M*2);
+    doc.text(lines,M,y); y+=lines.length*5+8;
+    ln(M,y,W-M,y); y+=10;
+
+    sf('bold',9,122,149,137); tx('ACTION PLAN',M,y); y+=8;
+    recs.forEach((r,i)=>{
+      if(y>242){doc.addPage();y=20;}
+      doc.setFillColor(225,245,238); doc.circle(M+3.5,y-1,4,'F');
+      sf('bold',9,15,110,86); tx(String(i+1),M+3.5,y+.5,{align:'center'});
+      sf('bold',11,15,28,20); tx(r.action,M+12,y); y+=6;
+      sf('normal',9,61,82,71);
+      tx(`Save ${r.co2Saved} T CO₂/yr   ·   ₹${Number(r.inrSaved).toLocaleString('en-IN')}/yr   ·   ${r.difficulty}`,M+12,y);
+      y+=11;
+    });
+    if(y>230){doc.addPage();y=20;}
+    doc.setFillColor(225,245,238); doc.setDrawColor(159,225,203);
+    doc.roundedRect(M,y,W-M*2,22,3,3,'FD');
+    sf('bold',11,15,110,86);
+    tx(`All 3 actions save ${tCo2} T CO₂/year and ₹${Number(tInr).toLocaleString('en-IN')}/year.`,M+6,y+9);
+    sf('normal',9,15,110,86);
+    tx(`Equivalent to planting ~${Math.round(+tCo2*45)} trees annually.`,M+6,y+16);
+    y+=32;
+    doc.setFillColor(247,250,248); doc.rect(0,277,W,20,'F');
+    sf('normal',8,122,149,137);
+    tx('Carbon Lens  ·  Data: India CEA (city-specific grid), GHG Protocol, DEFRA  ·  github.com/soumyax007/Riptide_Carbon-Lens',W/2,284,{align:'center'});
+    tx('This report is an estimate. Consult a certified sustainability professional for compliance-grade reporting.',W/2,290,{align:'center'});
+    doc.save(`CarbonLens_${bizName.replace(/\s+/g,'_')}_${date.replace(/\s+/g,'-')}.pdf`);
+  } catch(e) {
+    console.error(e);
+    alert('PDF error: '+e.message+'\n\nTry Ctrl+P to print instead.');
+  } finally {
+    const b=g('pdfBtn');
+    if(b){b.disabled=false;b.innerHTML=`<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v8M4.5 7l3 3 3-3M2 13h11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Download PDF Report`;}
+  }
+}
+
+/* ── UTILS ── */
+function g(id)   { return document.getElementById(id); }
+function show(id){ g(id).classList.remove('hidden'); }
+function hide(id){ g(id).classList.add('hidden'); }
+function pct(v,t){ return t>0 ? Math.round(v/t*100) : 0; }
+function dc(d)   { return d==='Easy'?'c-gr':d==='Medium'?'c-or':'c-re'; }
+function err(m)  { g('errBox').classList.remove('hidden'); g('errMsg').textContent=m; g('errBox').scrollIntoView({behavior:'smooth',block:'nearest'}); }
+function clearErr(){ g('errBox').classList.add('hidden'); g('errMsg').textContent=''; }
+</script>
+</body>
+</html>
